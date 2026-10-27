@@ -1,0 +1,19 @@
+# One-time: downloads the site images from Squarespace into assets/ and commits them.
+name: Fetch images
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash download-images.sh
+      - run: ls -la assets favicon.ico
+      - name: Commit images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets favicon.ico
+          git commit -m "Add site images downloaded from Squarespace" || echo "nothing to commit"
+          git push
